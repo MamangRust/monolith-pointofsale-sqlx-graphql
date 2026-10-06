@@ -1,0 +1,197 @@
+package mencache
+
+import (
+	"context"
+	"fmt"
+	"time"
+
+	db "github.com/MamangRust/monolith-pointofsale-pkg/database/schema"
+	"github.com/MamangRust/monolith-pointofsale-shared/cache"
+	"github.com/MamangRust/monolith-pointofsale-shared/domain/requests"
+)
+
+const (
+	transactionAllCacheKey  = "transaction:all:page:%d:pageSize:%d:search:%s"
+	transactionByIdCacheKey = "transaction:id:%d"
+
+	transactionByMerchantCacheKey = "transaction:merchant:%d:page:%d:pageSize:%d:search:%s"
+
+	transactionActiveCacheKey  = "transaction:active:page:%d:pageSize:%d:search:%s"
+	transactionTrashedCacheKey = "transaction:trashed:page:%d:pageSize:%d:search:%s"
+
+	transactionByOrderCacheKey = "transaction:order:%d"
+
+	ttlDefault = 5 * time.Minute
+)
+
+type transactionCacheResponse struct {
+	Data         []*db.GetTransactionsRow `json:"data"`
+	TotalRecords *int                     `json:"totalRecords"`
+}
+
+type transactionMerchantCacheResponse struct {
+	Data         []*db.GetTransactionByMerchantRow `json:"data"`
+	TotalRecords *int                              `json:"totalRecords"`
+}
+
+type transactionCacheResponseActive struct {
+	Data         []*db.GetTransactionsActiveRow `json:"data"`
+	TotalRecords *int                           `json:"totalRecords"`
+}
+
+type transactionCacheResponseTrashed struct {
+	Data         []*db.GetTransactionsTrashedRow `json:"data"`
+	TotalRecords *int                            `json:"totalRecords"`
+}
+
+type transactionQueryCache struct {
+	store *cache.CacheStore
+}
+
+func NewTransactionQueryCache(store *cache.CacheStore) TransactionQueryCache {
+	return &transactionQueryCache{store: store}
+}
+
+func (t *transactionQueryCache) GetCachedTransactionsCache(ctx context.Context, req *requests.FindAllTransaction) ([]*db.GetTransactionsRow, *int, bool) {
+	key := fmt.Sprintf(transactionAllCacheKey, req.Page, req.PageSize, req.Search)
+
+	result, found := cache.GetFromCache[transactionCacheResponse](ctx, t.store, key)
+	if !found || result == nil {
+		return nil, nil, false
+	}
+
+	return result.Data, result.TotalRecords, true
+}
+
+func (t *transactionQueryCache) SetCachedTransactionsCache(ctx context.Context, req *requests.FindAllTransaction, data []*db.GetTransactionsRow, total *int) {
+	if total == nil {
+		zero := 0
+		total = &zero
+	}
+
+	if data == nil {
+		data = []*db.GetTransactionsRow{}
+	}
+
+	key := fmt.Sprintf(transactionAllCacheKey, req.Page, req.PageSize, req.Search)
+	payload := &transactionCacheResponse{Data: data, TotalRecords: total}
+	cache.SetToCache(ctx, t.store, key, payload, ttlDefault)
+}
+
+func (t *transactionQueryCache) GetCachedTransactionByMerchant(ctx context.Context, req *requests.FindAllTransactionByMerchant) ([]*db.GetTransactionByMerchantRow, *int, bool) {
+	key := fmt.Sprintf(transactionByMerchantCacheKey, req.MerchantID, req.Page, req.PageSize, req.Search)
+
+	result, found := cache.GetFromCache[transactionMerchantCacheResponse](ctx, t.store, key)
+	if !found || result == nil {
+		return nil, nil, false
+	}
+
+	return result.Data, result.TotalRecords, true
+}
+
+func (t *transactionQueryCache) SetCachedTransactionByMerchant(ctx context.Context, req *requests.FindAllTransactionByMerchant, data []*db.GetTransactionByMerchantRow, total *int) {
+	if total == nil {
+		zero := 0
+		total = &zero
+	}
+
+	if data == nil {
+		data = []*db.GetTransactionByMerchantRow{}
+	}
+
+	key := fmt.Sprintf(transactionByMerchantCacheKey, req.MerchantID, req.Page, req.PageSize, req.Search)
+	payload := &transactionMerchantCacheResponse{Data: data, TotalRecords: total}
+	cache.SetToCache(ctx, t.store, key, payload, ttlDefault)
+}
+
+func (t *transactionQueryCache) GetCachedTransactionActiveCache(ctx context.Context, req *requests.FindAllTransaction) ([]*db.GetTransactionsActiveRow, *int, bool) {
+	key := fmt.Sprintf(transactionActiveCacheKey, req.Page, req.PageSize, req.Search)
+
+	result, found := cache.GetFromCache[transactionCacheResponseActive](ctx, t.store, key)
+	if !found || result == nil {
+		return nil, nil, false
+	}
+
+	return result.Data, result.TotalRecords, true
+}
+
+func (t *transactionQueryCache) SetCachedTransactionActiveCache(ctx context.Context, req *requests.FindAllTransaction, data []*db.GetTransactionsActiveRow, total *int) {
+	if total == nil {
+		zero := 0
+		total = &zero
+	}
+
+	if data == nil {
+		data = []*db.GetTransactionsActiveRow{}
+	}
+
+	key := fmt.Sprintf(transactionActiveCacheKey, req.Page, req.PageSize, req.Search)
+	payload := &transactionCacheResponseActive{Data: data, TotalRecords: total}
+	cache.SetToCache(ctx, t.store, key, payload, ttlDefault)
+}
+
+func (t *transactionQueryCache) GetCachedTransactionTrashedCache(ctx context.Context, req *requests.FindAllTransaction) ([]*db.GetTransactionsTrashedRow, *int, bool) {
+	key := fmt.Sprintf(transactionTrashedCacheKey, req.Page, req.PageSize, req.Search)
+
+	result, found := cache.GetFromCache[transactionCacheResponseTrashed](ctx, t.store, key)
+	if !found || result == nil {
+		return nil, nil, false
+	}
+
+	return result.Data, result.TotalRecords, true
+}
+
+func (t *transactionQueryCache) SetCachedTransactionTrashedCache(ctx context.Context, req *requests.FindAllTransaction, data []*db.GetTransactionsTrashedRow, total *int) {
+	if total == nil {
+		zero := 0
+		total = &zero
+	}
+
+	if data == nil {
+		data = []*db.GetTransactionsTrashedRow{}
+	}
+
+	key := fmt.Sprintf(transactionTrashedCacheKey, req.Page, req.PageSize, req.Search)
+	payload := &transactionCacheResponseTrashed{Data: data, TotalRecords: total}
+	cache.SetToCache(ctx, t.store, key, payload, ttlDefault)
+}
+
+func (t *transactionQueryCache) GetCachedTransactionCache(ctx context.Context, id int) (*db.Transaction, bool) {
+	key := fmt.Sprintf(transactionByIdCacheKey, id)
+
+	result, found := cache.GetFromCache[db.Transaction](ctx, t.store, key)
+	if !found || result == nil {
+		return nil, false
+	}
+
+	return result, true
+}
+
+func (t *transactionQueryCache) SetCachedTransactionCache(ctx context.Context, data *db.Transaction) {
+	if data == nil {
+		return
+	}
+
+	key := fmt.Sprintf(transactionByIdCacheKey, data.TransactionID)
+	cache.SetToCache(ctx, t.store, key, data, ttlDefault)
+}
+
+func (t *transactionQueryCache) GetCachedTransactionByOrderId(ctx context.Context, orderID int) (*db.Transaction, bool) {
+	key := fmt.Sprintf(transactionByOrderCacheKey, orderID)
+
+	result, found := cache.GetFromCache[db.Transaction](ctx, t.store, key)
+	if !found || result == nil {
+		return nil, false
+	}
+
+	return result, true
+}
+
+func (t *transactionQueryCache) SetCachedTransactionByOrderId(ctx context.Context, orderID int, data *db.Transaction) {
+	if data == nil {
+		return
+	}
+
+	key := fmt.Sprintf(transactionByOrderCacheKey, orderID)
+	cache.SetToCache(ctx, t.store, key, data, ttlDefault)
+}

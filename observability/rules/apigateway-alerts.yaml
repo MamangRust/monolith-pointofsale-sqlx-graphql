@@ -1,0 +1,349 @@
+groups:
+  - name: apigateway-alerts
+    rules:
+      - alert: AuthHighErrorRate
+        expr: |
+          sum(rate(auth_handler_requests_total{status="error"}[1m])) 
+          / 
+          sum(rate(auth_handler_requests_total[1m])) > 0.1
+        for: 2m
+        labels:
+          service: auth
+          severity: critical
+        annotations:
+          summary: "High error rate on auth service ({{ $value }}%)"
+          description: "More than 10% of auth requests are failing with 5xx status codes."
+
+      - alert: AuthHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(auth_handler_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          service: auth
+          severity: warning
+        annotations:
+          summary: "Auth service latency is high ({{ $value }}s)"
+          description: "95th percentile latency for auth service > 1s."
+
+      - alert: AuthNoTraffic
+        expr: |
+          rate(auth_handler_requests_total[5m]) == 0
+        for: 5m
+        labels:
+          service: auth
+          severity: warning
+        annotations:
+          summary: "No traffic on auth service"
+          description: "No incoming auth requests for 5 minutes."
+
+      - alert: CardHighErrorRate
+        expr: |
+          sum(rate(card_service_requests_total{status="error"}[1m])) 
+          / 
+          sum(rate(card_service_requests_total[1m])) > 0.1
+        for: 2m
+        labels:
+          service: card
+          severity: critical
+        annotations:
+          summary: "High error rate on card service ({{ $value }}%)"
+          description: "More than 10% of card requests are failing with 5xx status codes."
+
+      - alert: CardHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(card_service_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          service: card
+          severity: warning
+        annotations:
+          summary: "Card service latency is high ({{ $value }}s)"
+          description: "95th percentile latency for card service > 1s."
+      
+      - alert: CardNoTraffic
+        expr: |
+          rate(card_service_requests_total[5m]) == 0
+        for: 5m
+        labels:
+          service: card
+          severity: warning
+        annotations:
+          summary: "No traffic on card service"
+          description: "No incoming card requests for 5 minutes."
+
+      - alert: MerchantHighErrorRate
+        expr: |
+          sum(rate(merchant_service_requests_total{status="error"}[1m])) 
+          / 
+          sum(rate(merchant_service_requests_total[1m])) > 0.1
+        for: 2m
+        labels:
+          service: merchant
+          severity: critical
+        annotations:
+          summary: "High error rate on merchant service ({{ $value }}%)"
+          description: "More than 10% of merchant requests are failing with 5xx status codes."
+
+      - alert: MerchantHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(merchant_service_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          service: merchant
+          severity: warning
+        annotations:
+          summary: "Merchant service latency is high ({{ $value }}s)"
+          description: "95th percentile latency for merchant service > 1s."
+      
+      - alert: MerchantNoTraffic
+        expr: |
+          rate(merchant_service_requests_total[5m]) == 0
+        for: 5m
+        labels:
+          service: merchant
+          severity: warning
+        annotations:
+          summary: "No traffic on merchant service"
+    
+
+      - alert: RoleHighErrorRate
+        expr: |
+          sum(rate(role_service_requests_total{status="error"}[1m])) 
+          / 
+          sum(rate(role_service_requests_total[1m])) > 0.1
+        for: 2m
+        labels:
+          service: role
+          severity: critical
+        annotations:
+          summary: "High error rate on role service ({{ $value }}%)"
+          description: "More than 10% of role requests are failing with 5xx status codes."
+
+      - alert: RoleHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(role_service_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          service: role
+          severity: warning
+        annotations:
+          summary: "Role service latency is high ({{ $value }}s)"
+          description: "95th percentile latency for role service > 1s."
+      
+      - alert: RoleNoTraffic
+        expr: |
+          rate(role_service_requests_total[5m]) == 0
+        for: 5m
+        labels:
+          service: role
+          severity: warning
+        annotations:
+          summary: "No traffic on role service"
+
+
+      - alert: SaldoHighErrorRate
+        expr: |
+          sum(rate(saldo_service_requests_total{status="error"}[1m])) 
+          / 
+          sum(rate(saldo_service_requests_total[1m])) > 0.1
+        for: 2m
+        labels:
+          service: saldo
+          severity: critical
+        annotations:
+          summary: "High error rate on saldo service ({{ $value }}%)"
+          description: "More than 10% of saldo requests are failing with 5xx status codes."
+
+      - alert: SaldoHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(saldo_service_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          service: saldo
+          severity: warning
+        annotations:
+          summary: "Saldo service latency is high ({{ $value }}s)"
+          description: "95th percentile latency for saldo service > 1s."
+      
+      - alert: SaldoNoTraffic
+        expr: |
+          rate(saldo_service_requests_total[5m]) == 0
+        for: 5m
+        labels:
+          service: saldo
+          severity: warning
+        annotations:
+          summary: "No traffic on saldo service"
+      
+
+      - alert: TopupHighErrorRate
+        expr: |
+          sum(rate(topup_service_requests_total{status="error"}[1m])) 
+          / 
+          sum(rate(topup_service_requests_total[1m])) > 0.05
+        for: 2m
+        labels:
+          service: topup
+          severity: critical
+        annotations:
+          summary: "High error rate on topup service ({{ $value }}%)"
+          description: "More than 5% of topup requests are failing with 5xx status codes."
+      
+      - alert: TopupHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(topup_service_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          service: topup
+          severity: warning
+        annotations:
+          summary: "Topup service latency is high ({{ $value }}s)"
+          description: "95th percentile latency for topup service > 1s."
+      
+      - alert: TopupNoTraffic
+        expr: |
+          rate(topup_service_requests_total[5m]) == 0
+        for: 5m
+        labels:
+          service: topup
+          severity: warning
+        annotations:
+          summary: "No traffic on topup service"
+
+      - alert: TransactionHighErrorRate
+        expr: |
+          sum(rate(transaction_service_requests_total{status="error"}[1m])) 
+          / 
+          sum(rate(transaction_service_requests_total[1m])) > 0.05
+        for: 2m
+        labels:
+          service: transaction
+          severity: critical
+        annotations:
+          summary: "High error rate on transaction service ({{ $value }}%)"
+          description: "More than 5% of transaction requests are failing with 5xx status codes."
+
+      - alert: TransactionHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(transaction_service_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          service: transaction
+          severity: warning
+        annotations:
+          summary: "Transaction service latency is high ({{ $value }}s)"
+          description: "95th percentile latency for transaction service > 1s."
+      
+      - alert: TransactionNoTraffic
+        expr: |
+          rate(transaction_service_requests_total[5m]) == 0
+        for: 5m
+        labels:
+          service: transaction
+          severity: warning
+        annotations:
+          summary: "No traffic on transaction service"
+
+      - alert: TransferHighErrorRate
+        expr: |
+          sum(rate(transfer_service_requests_total{status="error"}[1m])) 
+          / 
+          sum(rate(transfer_service_requests_total[1m])) > 0.05
+        for: 2m
+        labels:
+          service: transfer
+          severity: critical
+        annotations:
+          summary: "High error rate on transfer service ({{ $value }}%)"
+          description: "More than 5% of transfer requests are failing with 5xx status codes."
+      
+      - alert: TransferHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(transfer_service_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          service: transfer
+          severity: warning
+        annotations:
+          summary: "Transfer service latency is high ({{ $value }}s)"
+          description: "95th percentile latency for transfer service > 1s."
+      
+      - alert: TransferNoTraffic
+        expr: |
+          rate(transfer_service_requests_total[5m]) == 0
+        for: 5m
+        labels:
+          service: transfer
+          severity: warning
+        annotations:
+          summary: "No traffic on transfer service"
+
+      - alert: UserHighErrorRate
+        expr: |
+          sum(rate(user_service_requests_total{status="error"}[1m])) 
+          / 
+          sum(rate(user_service_requests_total[1m])) > 0.1
+        for: 2m
+        labels:
+          service: user
+          severity: critical
+        annotations:
+          summary: "High error rate on user service ({{ $value }}%)"
+          description: "More than 10% of user requests are failing with 5xx status codes."
+      
+      - alert: UserHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(user_service_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          service: user
+          severity: warning
+        annotations:
+          summary: "User service latency is high ({{ $value }}s)"
+          description: "95th percentile latency for user service > 1s."
+      
+      - alert: UserNoTraffic
+        expr: |
+          rate(user_service_requests_total[5m]) == 0
+        for: 5m
+        labels:
+          service: user
+          severity: warning
+        annotations:
+          summary: "No traffic on user service"
+
+      - alert: WithdrawalHighErrorRate
+        expr: |
+          sum(rate(withdrawal_service_requests_total{status="error"}[1m])) 
+          / 
+          sum(rate(withdrawal_service_requests_total[1m])) > 0.05
+        for: 2m
+        labels:
+          service: withdrawal
+          severity: critical
+        annotations:
+          summary: "High error rate on withdrawal service ({{ $value }}%)"
+          description: "More than 5% of withdrawal requests are failing with 5xx status codes."
+
+      - alert: WithdrawalHighLatency
+        expr: |
+          histogram_quantile(0.95, rate(withdrawal_service_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          service: withdrawal
+          severity: warning
+        annotations:
+          summary: "Withdrawal service latency is high ({{ $value }}s)"
+          description: "95th percentile latency for withdrawal service > 1s."
+      
+      - alert: WithdrawalNoTraffic
+        expr: |
+          rate(withdrawal_service_requests_total[5m]) == 0
+        for: 5m
+        labels:
+          service: withdrawal
+          severity: warning
+        annotations:
+          summary: "No traffic on withdrawal service"
+
+          

@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+package pb.product;
+
+import "common/api.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/product";
+
+message FindAllProductRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string search = 3;
+}
+
+message FindAllProductMerchantRequest {
+    int32 merchant_id = 1;
+    string search = 2;
+    int32 category_id = 3;
+    int32 min_price = 4;
+    int32 max_price = 5;
+    int32 page = 6;
+    int32 page_size = 7;
+}
+
+message FindAllProductCategoryRequest {
+    string category_name = 1;
+    int32 page = 2;
+    int32 page_size = 3;
+    string search = 4;
+    int32 minprice = 5;
+    int32 maxprice = 6;
+}
+
+message FindByIdProductRequest {
+    int32 id = 1;
+}
+
+message CreateProductRequest {
+    int32 merchant_id = 1;
+    int32 category_id = 2;
+    string name = 3;
+    string description = 4;
+    int32 price = 5;
+    int32 count_in_stock = 6;
+    string brand = 7;
+    int32 weight = 8;
+    string image_product = 9;
+}
+
+message UpdateProductRequest {
+    int32 product_id = 1;
+    int32 merchant_id = 2;
+    int32 category_id = 3;
+    string name = 4;
+    string description = 5;
+    int32 price = 6;
+    int32 count_in_stock = 7;
+    string brand = 8;
+    int32 weight = 9;
+    string image_product = 10;
+}
+
+// AdjustProductStockRequest applies a signed delta to a product's stock; the
+// product service enforces the atomic `count_in_stock + delta >= 0` guard so
+// concurrent order flows can never drive the count below zero.
+message AdjustProductStockRequest {
+    int32 product_id = 1;
+    int32 delta = 2;
+}
+
+message ProductResponse {
+    int32 id = 1;
+    int32 merchant_id = 2;
+    int32 category_id = 3;
+    string name = 4;
+    string description = 5;
+    int32 price = 6;
+    int32 count_in_stock = 7;
+    string brand = 8;
+    int32 weight = 9;
+    float rating = 10;
+    string slug_product = 11;
+    string image_product = 12;
+    string barcode = 13;
+    string created_at = 14;
+    string updated_at = 15;
+}
+
+message ProductResponseDeleteAt {
+    int32 id = 1;
+    int32 merchant_id = 2;
+    int32 category_id = 3;
+    string name = 4;
+    string description = 5;
+    int32 price = 6;
+    int32 count_in_stock = 7;
+    string brand = 8;
+    int32 weight = 9;
+    float rating = 10;
+    string slug_product = 11;
+    string image_product = 12;
+    string barcode = 13;
+    string created_at = 14;
+    string updated_at = 15;
+    google.protobuf.StringValue deleted_at = 16;
+}
+
+message ApiResponseProduct {
+    string status = 1;
+    string message = 2;
+    ProductResponse data = 3;
+}
+
+message ApiResponseProductDeleteAt {
+    string status = 1;
+    string message = 2;
+    ProductResponseDeleteAt data = 3;
+}
+
+message ApiResponsesProduct {
+    string status = 1;
+    string message = 2;
+    repeated ProductResponse data = 3;
+}
+
+message ApiResponseProductDelete {
+    string status = 1;
+    string message = 2;
+}
+
+message ApiResponseProductAll {
+    string status = 1;
+    string message = 2;
+}
+
+message ApiResponsePaginationProductDeleteAt {
+    string status = 1;
+    string message = 2;
+    repeated ProductResponseDeleteAt data = 3;
+    pb.common.PaginationMeta pagination = 4;
+}
+
+message ApiResponsePaginationProduct {
+    string status = 1;
+    string message = 2;
+    repeated ProductResponse data = 3;
+    pb.common.PaginationMeta pagination = 4;
+}

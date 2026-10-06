@@ -1,0 +1,242 @@
+input FindAllCategoryRequest {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindByIdCategoryRequest {
+  id: Int!
+}
+
+input FindYearCategory {
+  year: Int!
+}
+
+input FindYearCategoryByMerchant {
+  merchant_id: Int!
+  year: Int!
+}
+
+input FindYearCategoryById {
+  category_id: Int!
+  year: Int!
+}
+
+input FindYearMonthTotalPrices {
+  year: Int!
+  month: Int!
+}
+
+input FindYearTotalPrices {
+  year: Int!
+}
+
+input FindYearMonthTotalPriceById {
+  year: Int!
+  month: Int!
+  category_id: Int!
+}
+
+input FindYearTotalPriceById {
+  year: Int!
+  category_id: Int!
+}
+
+input FindYearMonthTotalPriceByMerchant {
+  year: Int!
+  month: Int!
+  merchant_id: Int!
+}
+
+input FindYearTotalPriceByMerchant {
+  year: Int!
+  merchant_id: Int!
+}
+
+input CreateCategoryRequest {
+  name: String!
+  description: String
+}
+
+input UpdateCategoryRequest {
+  category_id: Int!
+  name: String!
+  description: String
+}
+
+type CategoryMonthPriceResponse {
+  month: String!
+  category_id: Int!
+  category_name: String!
+  order_count: Int!
+  items_sold: Int!
+  total_revenue: Int!
+}
+
+type CategoryYearPriceResponse {
+  year: String!
+  category_id: Int!
+  category_name: String!
+  order_count: Int!
+  items_sold: Int!
+  total_revenue: Int!
+  unique_products_sold: Int!
+}
+
+type CategoryResponse {
+  id: Int!
+  name: String!
+  description: String
+  slug_category: String
+  image_category: String
+  created_at: String
+  updated_at: String
+}
+
+type CategoryResponseDeleteAt {
+  id: Int!
+  name: String!
+  description: String
+  slug_category: String
+  image_category: String
+  created_at: String
+  updated_at: String
+  deleted_at: String
+}
+
+type CategoriesMonthlyTotalPriceResponse {
+  year: String!
+  month: String!
+  total_revenue: Int!
+}
+
+type CategoriesYearlyTotalPriceResponse {
+  year: String!
+  total_revenue: Int!
+}
+
+type ApiResponseCategory {
+  status: String!
+  message: String!
+  data: CategoryResponse
+}
+
+type ApiResponseCategoryDeleteAt {
+  status: String!
+  message: String!
+  data: CategoryResponseDeleteAt
+}
+
+type ApiResponsesCategory {
+  status: String!
+  message: String!
+  data: [CategoryResponse!]
+}
+
+type ApiResponseCategoryDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseCategoryAll {
+  status: String!
+  message: String!
+}
+
+type ApiResponsePaginationCategory {
+  status: String!
+  message: String!
+  data: [CategoryResponse!]
+  pagination: PaginationMeta
+}
+
+type ApiResponsePaginationCategoryDeleteAt {
+  status: String!
+  message: String!
+  data: [CategoryResponseDeleteAt!]
+  pagination: PaginationMeta
+}
+
+type ApiResponseCategoryMonthPrice {
+  status: String!
+  message: String!
+  data: [CategoryMonthPriceResponse!]
+}
+
+type ApiResponseCategoryYearPrice {
+  status: String!
+  message: String!
+  data: [CategoryYearPriceResponse!]
+}
+
+type ApiResponseCategoryMonthlyTotalPrice {
+  status: String!
+  message: String!
+  data: [CategoriesMonthlyTotalPriceResponse!]
+}
+
+type ApiResponseCategoryYearlyTotalPrice {
+  status: String!
+  message: String!
+  data: [CategoriesYearlyTotalPriceResponse!]
+}
+
+extend type Query {
+  findMonthlyTotalPrices(
+    input: FindYearMonthTotalPrices!
+  ): ApiResponseCategoryMonthlyTotalPrice
+  findYearlyTotalPrices(
+    input: FindYearTotalPrices!
+  ): ApiResponseCategoryYearlyTotalPrice
+
+  findMonthlyTotalPricesById(
+    input: FindYearMonthTotalPriceById!
+  ): ApiResponseCategoryMonthlyTotalPrice
+  findYearlyTotalPricesById(
+    input: FindYearTotalPriceById!
+  ): ApiResponseCategoryYearlyTotalPrice
+
+  findMonthlyTotalPricesByMerchant(
+    input: FindYearMonthTotalPriceByMerchant!
+  ): ApiResponseCategoryMonthlyTotalPrice
+  findYearlyTotalPricesByMerchant(
+    input: FindYearTotalPriceByMerchant!
+  ): ApiResponseCategoryYearlyTotalPrice
+
+  findMonthPrice(input: FindYearCategory!): ApiResponseCategoryMonthPrice
+  findYearPrice(input: FindYearCategory!): ApiResponseCategoryYearPrice
+  findMonthPriceByMerchant(
+    input: FindYearCategoryByMerchant!
+  ): ApiResponseCategoryMonthPrice
+  findYearPriceByMerchant(
+    input: FindYearCategoryByMerchant!
+  ): ApiResponseCategoryYearPrice
+  findMonthPriceById(
+    input: FindYearCategoryById!
+  ): ApiResponseCategoryMonthPrice
+  findYearPriceById(input: FindYearCategoryById!): ApiResponseCategoryYearPrice
+
+  findByActiveCategory(
+    input: FindAllCategoryRequest
+  ): ApiResponsePaginationCategoryDeleteAt
+  findByTrashedCategory(
+    input: FindAllCategoryRequest
+  ): ApiResponsePaginationCategoryDeleteAt
+  findAllCategory(input: FindAllCategoryRequest): ApiResponsePaginationCategory
+  findByIdCategory(input: FindByIdCategoryRequest!): ApiResponseCategory
+}
+
+extend type Mutation {
+  createCategory(input: CreateCategoryRequest!): ApiResponseCategory
+  updateCategory(input: UpdateCategoryRequest!): ApiResponseCategory
+
+  trashedCategory(input: FindByIdCategoryRequest!): ApiResponseCategoryDeleteAt
+  restoreCategory(input: FindByIdCategoryRequest!): ApiResponseCategoryDeleteAt
+
+  deleteCategoryPermanent(
+    input: FindByIdCategoryRequest!
+  ): ApiResponseCategoryDelete
+
+  restoreAllCategory: ApiResponseCategoryAll
+  deleteAllCategoryPermanent: ApiResponseCategoryAll
+}

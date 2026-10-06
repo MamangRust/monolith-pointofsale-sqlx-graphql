@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package pb.transaction.stats;
+
+import "common/api.proto";
+import "transaction/transaction_common.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/transaction";
+
+service TransactionStatsService {
+    rpc FindMonthStatusSuccess(FindMonthlyTransactionStatus)
+        returns (ApiResponseTransactionMonthAmountSuccess);
+
+    rpc FindYearStatusSuccess(FindYearlyTransactionStatus)
+        returns (ApiResponseTransactionYearAmountSuccess);
+
+    rpc FindMonthStatusFailed(FindMonthlyTransactionStatus)
+        returns (ApiResponseTransactionMonthAmountFailed);
+
+    rpc FindYearStatusFailed(FindYearlyTransactionStatus)
+        returns (ApiResponseTransactionYearAmountFailed);
+
+    rpc FindMonthMethodSuccess(MonthTransactionMethod)
+        returns (ApiResponseTransactionMonthPaymentMethod);
+
+    rpc FindYearMethodSuccess(YearTransactionMethod)
+        returns (ApiResponseTransactionYearPaymentmethod);
+
+    rpc FindMonthMethodFailed(MonthTransactionMethod)
+        returns (ApiResponseTransactionMonthPaymentMethod);
+
+    rpc FindYearMethodFailed(YearTransactionMethod)
+        returns (ApiResponseTransactionYearPaymentmethod);
+}

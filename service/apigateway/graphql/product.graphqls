@@ -1,0 +1,165 @@
+scalar Upload
+
+input FindAllProductInput {
+  page: Int
+  pageSize: Int
+  search: String
+}
+
+input FindAllProductMerchantInput {
+  merchantId: Int!
+  search: String
+  categoryId: Int
+  minPrice: Int
+  maxPrice: Int
+  page: Int
+  pageSize: Int
+}
+
+input FindAllProductCategoryInput {
+  categoryName: String
+  page: Int
+  pageSize: Int
+  search: String
+  minPrice: Int
+  maxPrice: Int
+}
+
+input FindByIdProductInput {
+  id: Int!
+}
+
+input CreateProductInput {
+  merchantId: Int!
+  categoryId: Int!
+  name: String!
+  description: String
+  price: Int!
+  countInStock: Int!
+  brand: String
+  weight: Int
+  image: Upload!
+}
+
+input UpdateProductInput {
+  productId: Int!
+  merchantId: Int!
+  categoryId: Int!
+  name: String
+  description: String
+  price: Int
+  countInStock: Int
+  brand: String
+  weight: Int
+  image: Upload
+}
+
+type ProductResponse {
+  id: Int!
+  merchantId: Int!
+  categoryId: Int!
+  name: String!
+  description: String
+  price: Int!
+  countInStock: Int!
+  brand: String
+  weight: Int
+  rating: Float
+  slugProduct: String
+  imageProduct: String
+  barcode: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type ProductResponseDeleteAt {
+  id: Int!
+  merchantId: Int!
+  categoryId: Int!
+  name: String!
+  description: String
+  price: Int!
+  countInStock: Int!
+  brand: String
+  weight: Int
+  rating: Float
+  slugProduct: String
+  imageProduct: String
+  barcode: String
+  createdAt: String!
+  updatedAt: String!
+  deletedAt: String
+}
+
+type ApiResponseProduct {
+  status: String!
+  message: String!
+  data: ProductResponse
+}
+
+type ApiResponseProductDeleteAt {
+  status: String!
+  message: String!
+  data: ProductResponseDeleteAt
+}
+
+type ApiResponsesProduct {
+  status: String!
+  message: String!
+  data: [ProductResponse!]!
+}
+
+type ApiResponsePaginationProduct {
+  status: String!
+  message: String!
+  data: [ProductResponse!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponsePaginationProductDeleteAt {
+  status: String!
+  message: String!
+  data: [ProductResponseDeleteAt!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponseProductDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseProductAll {
+  status: String!
+  message: String!
+}
+
+extend type Query {
+  findAllProduct(input: FindAllProductInput): ApiResponsePaginationProduct!
+  findByMerchantProduct(
+    input: FindAllProductMerchantInput!
+  ): ApiResponsePaginationProduct!
+  findByCategoryProduct(
+    input: FindAllProductCategoryInput!
+  ): ApiResponsePaginationProduct!
+  findByIdProduct(input: FindByIdProductInput!): ApiResponseProduct!
+  findByActiveProduct(
+    input: FindAllProductInput
+  ): ApiResponsePaginationProductDeleteAt!
+  findByTrashedProduct(
+    input: FindAllProductInput
+  ): ApiResponsePaginationProductDeleteAt!
+}
+
+extend type Mutation {
+  createProduct(input: CreateProductInput!): ApiResponseProduct!
+  updateProduct(input: UpdateProductInput!): ApiResponseProduct!
+
+  trashedProduct(input: FindByIdProductInput!): ApiResponseProductDeleteAt!
+  restoreProduct(input: FindByIdProductInput!): ApiResponseProductDeleteAt!
+  deleteProductPermanent(
+    input: FindByIdProductInput!
+  ): ApiResponseProductDelete!
+
+  restoreAllProduct: ApiResponseProductAll!
+  deleteAllProductPermanent: ApiResponseProductAll!
+}

@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package pb.merchant_document;
+
+import "common/api.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/merchant_document";
+
+message MerchantDocument {
+    int32 document_id = 1;
+    int32 merchant_id = 2;
+    string document_type = 3;
+    string document_url = 4;
+    string status = 5;
+    string note = 6;
+    string uploaded_at = 7;
+    string updated_at = 8;
+}
+
+message MerchantDocumentDeleteAt{
+    int32 document_id = 1;
+    int32 merchant_id = 2;
+    string document_type = 3;
+    string document_url = 4;
+    string status = 5;
+    string note = 6;
+    string uploaded_at = 7;
+    string updated_at = 8;
+    google.protobuf.StringValue deleted_at = 9;
+}
+
+message CreateMerchantDocumentRequest {
+    int32 merchant_id = 1;
+    string document_type = 2;
+    string document_url = 3;
+}
+
+message UpdateMerchantDocumentRequest {
+    int32 document_id = 1;
+    int32 merchant_id = 2;
+    string document_type = 3;
+    string document_url = 4;
+    string note = 5;
+    string status = 6;
+}
+
+message UpdateMerchantDocumentStatusRequest {
+    int32 document_id = 1;
+    int32 merchant_id = 2;
+    string note = 3;
+    string status = 4;
+}
+
+message FindMerchantDocumentByIdRequest {
+    int32 document_id = 1;
+}
+
+message TrashedMerchantDocumentRequest {
+    int32 document_id = 1;
+}
+
+message RestoreMerchantDocumentRequest {
+    int32 document_id = 1;
+}
+
+message DeleteMerchantDocumentPermanentRequest {
+    int32 document_id = 1;
+}
+
+message FindAllMerchantDocumentsRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string search = 3;
+}
+
+message ApiResponseMerchantDocument {
+    string status = 1;
+    string message = 2;
+    MerchantDocument data = 3;
+}
+
+message ApiResponsesMerchantDocument {
+    string status = 1;
+    string message = 2;
+    repeated MerchantDocument data = 3;
+}
+
+message ApiResponsePaginationMerchantDocument {
+    string status = 1;
+    string message = 2;
+    repeated MerchantDocument data = 3;
+    pb.common.PaginationMeta pagination = 4;
+}
+
+message ApiResponsePaginationMerchantDocumentAt {
+    string status = 1;
+    string message = 2;
+    repeated MerchantDocumentDeleteAt data = 3;
+    pb.common.PaginationMeta pagination = 4;
+}
+
+message ApiResponseMerchantDocumentDelete{
+    string status = 1;
+    string message = 2;
+}
+
+message ApiResponseMerchantDocumentAll {
+    string status = 1;
+    string message = 2;
+}

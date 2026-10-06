@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package pb.product;
+
+import "common/api.proto";
+import "google/protobuf/empty.proto";
+import "product/product_common.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/product";
+
+service ProductCommandService {
+    rpc FindByTrashed(FindAllProductRequest) returns (ApiResponsePaginationProductDeleteAt) {}
+    rpc Create(CreateProductRequest) returns (ApiResponseProduct);
+    rpc Update(UpdateProductRequest) returns (ApiResponseProduct);
+    rpc TrashedProduct(FindByIdProductRequest) returns (ApiResponseProductDeleteAt);
+    rpc RestoreProduct(FindByIdProductRequest) returns (ApiResponseProductDeleteAt);
+    rpc DeleteProductPermanent(FindByIdProductRequest) returns (ApiResponseProductDelete);
+    rpc RestoreAllProduct(google.protobuf.Empty) returns (ApiResponseProductAll){}
+    rpc DeleteAllProductPermanent(google.protobuf.Empty) returns (ApiResponseProductAll){}
+    // AdjustProductStock applies a signed delta to a product's stock atomically
+    // under the owning service; negative deltas refuse to go below zero.
+    rpc AdjustProductStock(AdjustProductStockRequest) returns (ApiResponseProduct);
+}

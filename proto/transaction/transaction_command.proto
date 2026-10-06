@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package pb.transaction;
+
+import "common/api.proto";
+import "google/protobuf/empty.proto";
+import "transaction/transaction_common.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/transaction";
+
+service TransactionCommandService {
+    rpc FindByTrashed(FindAllTransactionRequest) returns (ApiResponsePaginationTransactionDeleteAt) {}
+    rpc Create(CreateTransactionRequest) returns (ApiResponseTransaction);
+    rpc Update(UpdateTransactionRequest) returns (ApiResponseTransaction);
+    rpc TrashedTransaction(FindByIdTransactionRequest) returns (ApiResponseTransactionDeleteAt);
+    rpc RestoreTransaction(FindByIdTransactionRequest) returns (ApiResponseTransactionDeleteAt);
+    rpc DeleteTransactionPermanent(FindByIdTransactionRequest) returns (ApiResponseTransactionDelete);
+    rpc RestoreAllTransaction(google.protobuf.Empty) returns (ApiResponseTransactionAll){}
+    rpc DeleteAllTransactionPermanent(google.protobuf.Empty) returns (ApiResponseTransactionAll){}
+}

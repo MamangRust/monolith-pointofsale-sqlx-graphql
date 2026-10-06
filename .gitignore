@@ -1,0 +1,27 @@
+# Binaries & build artifacts
+bin/
+*.test
+service/*/main
+service/*/monolith-point-of-sale-*
+
+# Environment files (docker.env is tracked intentionally)
+.env
+.env.*
+!.env.example
+production.env
+*.local.env
+
+# Logs
+logs/
+*.log
+
+# Tooling / IDE
+.qwen/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

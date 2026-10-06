@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: point-of-sale
+
+resources:
+- apigateway/
+- auth/
+- category/
+- common/
+- cashier/
+- db-migration/
+- email/
+- kafka/
+- merchant/
+- nginx/
+- observability/
+- order/
+- order_item/
+- postgres/
+- product/
+- redis/
+- role/
+- transaction/
+- user/
+
+patches:
+- path: image-pull-secret-patch.yaml
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: "^(apigateway|auth|cashier|category|email|merchant|order|order-item|product|role|transaction|user)$"
+- path: job-image-pull-secret-patch.yaml
+  target:
+    group: batch
+    version: v1
+    kind: Job
+    name: migrate

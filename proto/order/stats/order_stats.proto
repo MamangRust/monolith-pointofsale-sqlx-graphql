@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package pb.order.stats;
+
+import "common/api.proto";
+import "order/order_common.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/order";
+
+service OrderStatsService {
+    rpc FindMonthlyTotalRevenue(
+        FindYearMonthTotalRevenue
+    ) returns (
+        ApiResponseOrderMonthlyTotalRevenue
+    ) {}
+
+    rpc FindYearlyTotalRevenue(
+        FindYearTotalRevenue
+    ) returns (
+        ApiResponseOrderYearlyTotalRevenue
+    ) {}
+
+    rpc FindMonthlyRevenue(
+        FindYearOrder
+    ) returns (
+        ApiResponseOrderMonthly
+    );
+
+    rpc FindYearlyRevenue(
+        FindYearOrder
+    ) returns (
+        ApiResponseOrderYearly
+    );
+}

@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package pb.merchant;
+
+import "common/api.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/merchant";
+
+message FindAllMerchantRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string search = 3;
+}
+
+message FindByIdMerchantRequest {
+    int32 id = 1;
+}
+
+message CreateMerchantRequest {
+    int32 user_id = 1;
+    string name = 2;
+    string description = 3;
+    string address = 4;
+    string contact_email = 5;
+    string contact_phone = 6;
+    string status = 7;
+}
+
+message UpdateMerchantRequest {
+    int32 merchant_id = 1;
+    int32 user_id = 2;
+    string name = 3;
+    string description = 4;
+    string address = 5;
+    string contact_email = 6;
+    string contact_phone = 7;
+    string status = 8;
+}
+
+message UpdateMerchantStatusRequest{
+    int32 merchant_id = 1;
+    string status = 2;
+}
+
+message MerchantResponse {
+    int32 id = 1;
+    int32 user_id = 2;
+    string name = 3;
+    string description = 4;
+    string address = 5;
+    string contact_email = 6;
+    string contact_phone = 7;
+    string status = 8;
+    string created_at = 9;
+    string updated_at = 10;
+}
+
+message MerchantResponseDeleteAt {
+    int32 id = 1;
+    int32 user_id = 2;
+    string name = 3;
+    string description = 4;
+    string address = 5;
+    string contact_email = 6;
+    string contact_phone = 7;
+    string status = 8;
+    string created_at = 9;
+    string updated_at = 10;
+    string deleted_at = 11;
+}
+
+message ApiResponseMerchant {
+    string status = 1;
+    string message = 2;
+    MerchantResponse data = 3;
+}
+
+message ApiResponseMerchantDeleteAt{
+    string status = 1;
+    string message = 2;
+    MerchantResponseDeleteAt data = 3;
+}
+
+message ApiResponsesMerchant {
+    string status = 1;
+    string message = 2;
+    repeated MerchantResponse data = 3;
+}
+
+message ApiResponseMerchantDelete {
+    string status = 1;
+    string message = 2;
+}
+
+message ApiResponseMerchantAll {
+    string status = 1;
+    string message = 2;
+}
+
+message ApiResponsePaginationMerchantDeleteAt {
+    string status = 1;
+    string message = 2;
+    repeated MerchantResponseDeleteAt data = 3;
+    pb.common.PaginationMeta pagination = 4;
+}
+
+message ApiResponsePaginationMerchant {
+    string status = 1;
+    string message = 2;
+    repeated MerchantResponse data = 3;
+    pb.common.PaginationMeta pagination = 4;
+}

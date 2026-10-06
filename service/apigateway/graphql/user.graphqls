@@ -1,0 +1,108 @@
+input FindAllUserInput {
+  page: Int = 1
+  page_size: Int = 10
+  search: String
+}
+
+input FindByIdUserInput {
+  id: Int!
+}
+
+input CreateUserInput {
+  firstname: String!
+  lastname: String!
+  email: String!
+  password: String!
+  confirm_password: String!
+}
+
+input UpdateUserInput {
+  id: Int!
+  firstname: String
+  lastname: String
+  email: String
+  password: String
+  confirm_password: String
+}
+
+type UserResponse {
+  id: Int!
+  firstname: String!
+  lastname: String!
+  email: String!
+  created_at: String!
+  updated_at: String!
+}
+
+type UserResponseDeleteAt {
+  id: Int!
+  firstname: String!
+  lastname: String!
+  email: String!
+  created_at: String!
+  updated_at: String!
+  deleted_at: String
+}
+
+type ApiResponseUserResponse {
+  status: String!
+  message: String!
+  data: UserResponse
+}
+
+type ApiResponseUserResponseDeleteAt {
+  status: String!
+  message: String!
+  data: UserResponseDeleteAt
+}
+
+type ApiResponsesUser {
+  status: String!
+  message: String!
+  data: [UserResponse!]!
+}
+
+type ApiResponseUserDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseUserAll {
+  status: String!
+  message: String!
+}
+
+type ApiResponsePaginationUser {
+  status: String!
+  message: String!
+  data: [UserResponse!]!
+  pagination: PaginationMeta!
+}
+
+type ApiResponsePaginationUserDeleteAt {
+  status: String!
+  message: String!
+  data: [UserResponseDeleteAt!]!
+  pagination: PaginationMeta!
+}
+
+extend type Query {
+  findAllUsers(input: FindAllUserInput): ApiResponsePaginationUser!
+  findByIdUser(input: FindByIdUserInput!): ApiResponseUserResponse!
+  findByActiveUsers(input: FindAllUserInput): ApiResponsePaginationUserDeleteAt!
+  findByTrashedUsers(
+    input: FindAllUserInput
+  ): ApiResponsePaginationUserDeleteAt!
+}
+
+extend type Mutation {
+  createUser(input: CreateUserInput!): ApiResponseUserResponse!
+  updateUser(input: UpdateUserInput!): ApiResponseUserResponse!
+
+  trashedUser(input: FindByIdUserInput!): ApiResponseUserResponseDeleteAt!
+  restoreUser(input: FindByIdUserInput!): ApiResponseUserResponseDeleteAt!
+  deleteUserPermanent(input: FindByIdUserInput!): ApiResponseUserDelete!
+
+  restoreAllUser: ApiResponseUserAll!
+  deleteAllUserPermanent: ApiResponseUserAll!
+}

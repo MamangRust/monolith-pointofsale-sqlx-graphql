@@ -1,0 +1,122 @@
+input FindAllMerchantInput {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindByIdMerchantInput {
+  id: Int!
+}
+
+input CreateMerchantInput {
+  user_id: Int!
+  name: String!
+  description: String
+  address: String
+  contact_email: String
+  contact_phone: String
+  status: String
+}
+
+input UpdateMerchantInput {
+  merchant_id: Int!
+  user_id: Int
+  name: String
+  description: String
+  address: String
+  contact_email: String
+  contact_phone: String
+  status: String
+}
+
+type MerchantResponse {
+  id: Int!
+  user_id: Int!
+  name: String!
+  description: String
+  address: String
+  contact_email: String
+  contact_phone: String
+  status: String
+  created_at: String
+  updated_at: String
+}
+
+type MerchantResponseDeleteAt {
+  id: Int!
+  user_id: Int!
+  name: String!
+  description: String
+  address: String
+  contact_email: String
+  contact_phone: String
+  status: String
+  created_at: String
+  updated_at: String
+  deleted_at: String
+}
+
+type ApiResponseMerchant {
+  status: String!
+  message: String!
+  data: MerchantResponse
+}
+
+type ApiResponseMerchantDeleteAt {
+  status: String!
+  message: String!
+  data: MerchantResponseDeleteAt
+}
+
+type ApiResponsesMerchant {
+  status: String!
+  message: String!
+  data: [MerchantResponse!]
+}
+
+type ApiResponseMerchantDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseMerchantAll {
+  status: String!
+  message: String!
+}
+
+type ApiResponsePaginationMerchant {
+  status: String!
+  message: String!
+  data: [MerchantResponse!]
+  pagination: PaginationMeta
+}
+
+type ApiResponsePaginationMerchantDeleteAt {
+  status: String!
+  message: String!
+  data: [MerchantResponseDeleteAt!]
+  pagination: PaginationMeta
+}
+
+extend type Query {
+  findAllMerchant(input: FindAllMerchantInput!): ApiResponsePaginationMerchant
+  findByIdMerchant(input: FindByIdMerchantInput!): ApiResponseMerchant
+  findByActiveMerchant(
+    input: FindAllMerchantInput!
+  ): ApiResponsePaginationMerchantDeleteAt
+  findByTrashedMerchant(
+    input: FindAllMerchantInput!
+  ): ApiResponsePaginationMerchantDeleteAt
+}
+
+extend type Mutation {
+  createMerchant(input: CreateMerchantInput!): ApiResponseMerchant
+  updateMerchant(input: UpdateMerchantInput!): ApiResponseMerchant
+  trashedMerchant(input: FindByIdMerchantInput!): ApiResponseMerchantDeleteAt
+  restoreMerchant(input: FindByIdMerchantInput!): ApiResponseMerchantDeleteAt
+  deleteMerchantPermanent(
+    input: FindByIdMerchantInput!
+  ): ApiResponseMerchantDelete
+  restoreAllMerchant: ApiResponseMerchantAll
+  deleteAllMerchantPermanent: ApiResponseMerchantAll
+}

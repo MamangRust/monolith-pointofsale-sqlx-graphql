@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package pb.merchant_document;
+
+import "common/api.proto";
+import "google/protobuf/empty.proto";
+import "merchant_document/merchant_document_common.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/merchant_document";
+
+service Merchant_documentCommandService {
+    rpc FindAllTrashed (FindAllMerchantDocumentsRequest) returns (ApiResponsePaginationMerchantDocumentAt) {}
+    rpc Create (CreateMerchantDocumentRequest) returns (ApiResponseMerchantDocument) {}
+    rpc Update (UpdateMerchantDocumentRequest) returns (ApiResponseMerchantDocument) {}
+    rpc UpdateStatus(UpdateMerchantDocumentStatusRequest) returns(ApiResponseMerchantDocument){}
+    rpc Trashed (TrashedMerchantDocumentRequest) returns (ApiResponseMerchantDocument) {}
+    rpc Restore (RestoreMerchantDocumentRequest) returns (ApiResponseMerchantDocument) {}
+    rpc DeletePermanent (DeleteMerchantDocumentPermanentRequest) returns (ApiResponseMerchantDocumentDelete) {}
+    rpc RestoreAll (google.protobuf.Empty) returns (ApiResponseMerchantDocumentAll) {}
+    rpc DeleteAllPermanent (google.protobuf.Empty) returns (ApiResponseMerchantDocumentAll) {}
+}

@@ -1,0 +1,151 @@
+package response_api
+
+import (
+	pb "github.com/MamangRust/monolith-pointofsale-pb"
+	pbcashier "github.com/MamangRust/monolith-pointofsale-pb/cashier"
+	pbcategory "github.com/MamangRust/monolith-pointofsale-pb/category"
+	pbmerchant "github.com/MamangRust/monolith-pointofsale-pb/merchant"
+	pbmerchant_document "github.com/MamangRust/monolith-pointofsale-pb/merchant_document"
+	pborder "github.com/MamangRust/monolith-pointofsale-pb/order"
+	pbproduct "github.com/MamangRust/monolith-pointofsale-pb/product"
+	pbrole "github.com/MamangRust/monolith-pointofsale-pb/role"
+	pbtransaction "github.com/MamangRust/monolith-pointofsale-pb/transaction"
+	pbuser "github.com/MamangRust/monolith-pointofsale-pb/user"
+	"github.com/MamangRust/monolith-pointofsale-shared/domain/response"
+)
+
+type AuthResponseMapper interface {
+	ToResponseVerifyCode(res *pb.ApiResponseVerifyCode) *response.ApiResponseVerifyCode
+	ToResponseForgotPassword(res *pb.ApiResponseForgotPassword) *response.ApiResponseForgotPassword
+	ToResponseResetPassword(res *pb.ApiResponseResetPassword) *response.ApiResponseResetPassword
+	ToResponseLogin(res *pb.ApiResponseLogin) *response.ApiResponseLogin
+	ToResponseRegister(res *pb.ApiResponseRegister) *response.ApiResponseRegister
+	ToResponseRefreshToken(res *pb.ApiResponseRefreshToken) *response.ApiResponseRefreshToken
+	ToResponseGetMe(res *pb.ApiResponseGetMe) *response.ApiResponseGetMe
+}
+
+type RoleResponseMapper interface {
+	ToApiResponseRoleAll(pbResponse *pbrole.ApiResponseRoleAll) *response.ApiResponseRoleAll
+	ToApiResponseRoleDelete(pbResponse *pbrole.ApiResponseRoleDelete) *response.ApiResponseRoleDelete
+	ToApiResponseRole(pbResponse *pbrole.ApiResponseRole) *response.ApiResponseRole
+	ToApiResponsesRole(pbResponse *pbrole.ApiResponsesRole) *response.ApiResponsesRole
+	ToApiResponsePaginationRole(pbResponse *pbrole.ApiResponsePaginationRole) *response.ApiResponsePaginationRole
+	ToApiResponsePaginationRoleDeleteAt(pbResponse *pbrole.ApiResponsePaginationRoleDeleteAt) *response.ApiResponsePaginationRoleDeleteAt
+}
+
+type UserResponseMapper interface {
+	ToApiResponseUserDeleteAt(pbResponse *pbuser.ApiResponseUserDeleteAt) *response.ApiResponseUserDeleteAt
+	ToApiResponseUser(pbResponse *pbuser.ApiResponseUser) *response.ApiResponseUser
+	ToApiResponsesUser(pbResponse *pbuser.ApiResponsesUser) *response.ApiResponsesUser
+
+	ToApiResponseUserDelete(pbResponse *pbuser.ApiResponseUserDelete) *response.ApiResponseUserDelete
+	ToApiResponseUserAll(pbResponse *pbuser.ApiResponseUserAll) *response.ApiResponseUserAll
+	ToApiResponsePaginationUserDeleteAt(pbResponse *pbuser.ApiResponsePaginationUserDeleteAt) *response.ApiResponsePaginationUserDeleteAt
+	ToApiResponsePaginationUser(pbResponse *pbuser.ApiResponsePaginationUser) *response.ApiResponsePaginationUser
+}
+
+type CategoryResponseMapper interface {
+	ToApiResponseCategoryMonthlyTotalPrice(pbResponse *pbcategory.ApiResponseCategoryMonthlyTotalPrice) *response.ApiResponseCategoryMonthlyTotalPrice
+	ToApiResponseCategoryYearlyTotalPrice(pbResponse *pbcategory.ApiResponseCategoryYearlyTotalPrice) *response.ApiResponseCategoryYearlyTotalPrice
+
+	ToApiResponseCategoryMonthlyPrice(pbResponse *pbcategory.ApiResponseCategoryMonthPrice) *response.ApiResponseCategoryMonthPrice
+	ToApiResponseCategoryYearlyPrice(pbResponse *pbcategory.ApiResponseCategoryYearPrice) *response.ApiResponseCategoryYearPrice
+
+	ToApiResponseCategory(pbResponse *pbcategory.ApiResponseCategory) *response.ApiResponseCategory
+	ToApiResponseCategoryDeleteAt(pbResponse *pbcategory.ApiResponseCategoryDeleteAt) *response.ApiResponseCategoryDeleteAt
+	ToApiResponsesCategory(pbResponse *pbcategory.ApiResponsesCategory) *response.ApiResponsesCategory
+	ToApiResponseCategoryDelete(pbResponse *pbcategory.ApiResponseCategoryDelete) *response.ApiResponseCategoryDelete
+	ToApiResponseCategoryAll(pbResponse *pbcategory.ApiResponseCategoryAll) *response.ApiResponseCategoryAll
+	ToApiResponsePaginationCategoryDeleteAt(pbResponse *pbcategory.ApiResponsePaginationCategoryDeleteAt) *response.ApiResponsePaginationCategoryDeleteAt
+	ToApiResponsePaginationCategory(pbResponse *pbcategory.ApiResponsePaginationCategory) *response.ApiResponsePaginationCategory
+}
+
+type CashierResponseMapper interface {
+	ToApiResponseMonthlyTotalSales(pbResponse *pbcashier.ApiResponseCashierMonthlyTotalSales) *response.ApiResponseCashierMonthlyTotalSales
+	ToApiResponseYearlyTotalSales(pbResponse *pbcashier.ApiResponseCashierYearlyTotalSales) *response.ApiResponseCashierYearlyTotalSales
+
+	ToApiResponseCashierMonthlySale(pbResponse *pbcashier.ApiResponseCashierMonthSales) *response.ApiResponseCashierMonthSales
+	ToApiResponseCashierYearlySale(pbResponse *pbcashier.ApiResponseCashierYearSales) *response.ApiResponseCashierYearSales
+
+	ToApiResponseCashier(pbResponse *pbcashier.ApiResponseCashier) *response.ApiResponseCashier
+	ToApiResponsesCashier(pbResponse *pbcashier.ApiResponsesCashier) *response.ApiResponsesCashier
+	ToApiResponseCashierAll(pbResponse *pbcashier.ApiResponseCashierAll) *response.ApiResponseCashierAll
+	ToApiResponseCashierDelete(pbResponse *pbcashier.ApiResponseCashierDelete) *response.ApiResponseCashierDelete
+	ToApiResponseCashierDeleteAt(pbResponse *pbcashier.ApiResponseCashierDeleteAt) *response.ApiResponseCashierDeleteAt
+	ToApiResponsePaginationCashierDeleteAt(pbResponse *pbcashier.ApiResponsePaginationCashierDeleteAt) *response.ApiResponsePaginationCashierDeleteAt
+	ToApiResponsePaginationCashier(pbResponse *pbcashier.ApiResponsePaginationCashier) *response.ApiResponsePaginationCashier
+}
+
+type MerchantResponseMapper interface {
+	ToApiResponseMerchant(pbResponse *pbmerchant.ApiResponseMerchant) *response.ApiResponseMerchant
+
+	ToApiResponseMerchantDeleteAt(pbResponse *pbmerchant.ApiResponseMerchantDeleteAt) *response.ApiResponseMerchantDeleteAt
+	ToApiResponsesMerchant(pbResponse *pbmerchant.ApiResponsesMerchant) *response.ApiResponsesMerchant
+	ToApiResponseMerchantDelete(pbResponse *pbmerchant.ApiResponseMerchantDelete) *response.ApiResponseMerchantDelete
+	ToApiResponseMerchantAll(pbResponse *pbmerchant.ApiResponseMerchantAll) *response.ApiResponseMerchantAll
+	ToApiResponsePaginationMerchantDeleteAt(pbResponse *pbmerchant.ApiResponsePaginationMerchantDeleteAt) *response.ApiResponsePaginationMerchantDeleteAt
+	ToApiResponsePaginationMerchant(pbResponse *pbmerchant.ApiResponsePaginationMerchant) *response.ApiResponsePaginationMerchant
+}
+
+type MerchantDocumentResponseMapper interface {
+	ToApiResponseMerchantDocument(doc *pbmerchant_document.ApiResponseMerchantDocument) *response.ApiResponseMerchantDocument
+	ToApiResponsesMerchantDocument(docs *pbmerchant_document.ApiResponsesMerchantDocument) *response.ApiResponsesMerchantDocument
+
+	ToApiResponsePaginationMerchantDocument(docs *pbmerchant_document.ApiResponsePaginationMerchantDocument) *response.ApiResponsePaginationMerchantDocument
+	ToApiResponsePaginationMerchantDocumentDeleteAt(docs *pbmerchant_document.ApiResponsePaginationMerchantDocumentAt) *response.ApiResponsePaginationMerchantDocumentDeleteAt
+
+	ToApiResponseMerchantDocumentAll(resp *pbmerchant_document.ApiResponseMerchantDocumentAll) *response.ApiResponseMerchantDocumentAll
+	ToApiResponseMerchantDocumentDeleteAt(resp *pbmerchant_document.ApiResponseMerchantDocumentDelete) *response.ApiResponseMerchantDocumentDelete
+}
+
+type OrderItemResponseMapper interface {
+	ToApiResponseOrderItem(pbResponse *pb.ApiResponseOrderItem) *response.ApiResponseOrderItem
+	ToApiResponsesOrderItem(pbResponse *pb.ApiResponsesOrderItem) *response.ApiResponsesOrderItem
+	ToApiResponseOrderItemDelete(pbResponse *pb.ApiResponseOrderItemDelete) *response.ApiResponseOrderItemDelete
+	ToApiResponseOrderItemAll(pbResponse *pb.ApiResponseOrderItemAll) *response.ApiResponseOrderItemAll
+	ToApiResponsePaginationOrderItemDeleteAt(pbResponse *pb.ApiResponsePaginationOrderItemDeleteAt) *response.ApiResponsePaginationOrderItemDeleteAt
+	ToApiResponsePaginationOrderItem(pbResponse *pb.ApiResponsePaginationOrderItem) *response.ApiResponsePaginationOrderItem
+}
+
+type OrderResponseMapper interface {
+	ToApiResponseMonthlyTotalRevenue(pbResponse *pborder.ApiResponseOrderMonthlyTotalRevenue) *response.ApiResponseOrderMonthlyTotalRevenue
+	ToApiResponseYearlyTotalRevenue(pbResponse *pborder.ApiResponseOrderYearlyTotalRevenue) *response.ApiResponseOrderYearlyTotalRevenue
+
+	ToApiResponseMonthlyOrder(pbResponse *pborder.ApiResponseOrderMonthly) *response.ApiResponseOrderMonthly
+	ToApiResponseYearlyOrder(pbResponse *pborder.ApiResponseOrderYearly) *response.ApiResponseOrderYearly
+
+	ToApiResponseOrder(pbResponse *pborder.ApiResponseOrder) *response.ApiResponseOrder
+	ToApiResponseOrderDeleteAt(pbResponse *pborder.ApiResponseOrderDeleteAt) *response.ApiResponseOrderDeleteAt
+	ToApiResponsesOrder(pbResponse *pborder.ApiResponsesOrder) *response.ApiResponsesOrder
+	ToApiResponseOrderDelete(pbResponse *pborder.ApiResponseOrderDelete) *response.ApiResponseOrderDelete
+	ToApiResponseOrderAll(pbResponse *pborder.ApiResponseOrderAll) *response.ApiResponseOrderAll
+	ToApiResponsePaginationOrderDeleteAt(pbResponse *pborder.ApiResponsePaginationOrderDeleteAt) *response.ApiResponsePaginationOrderDeleteAt
+	ToApiResponsePaginationOrder(pbResponse *pborder.ApiResponsePaginationOrder) *response.ApiResponsePaginationOrder
+}
+
+type ProductResponseMapper interface {
+	ToApiResponseProduct(pbResponse *pbproduct.ApiResponseProduct) *response.ApiResponseProduct
+	ToApiResponsesProductDeleteAt(pbResponse *pbproduct.ApiResponseProductDeleteAt) *response.ApiResponseProductDeleteAt
+	ToApiResponsesProduct(pbResponse *pbproduct.ApiResponsesProduct) *response.ApiResponsesProduct
+	ToApiResponseProductDelete(pbResponse *pbproduct.ApiResponseProductDelete) *response.ApiResponseProductDelete
+	ToApiResponseProductAll(pbResponse *pbproduct.ApiResponseProductAll) *response.ApiResponseProductAll
+	ToApiResponsePaginationProductDeleteAt(pbResponse *pbproduct.ApiResponsePaginationProductDeleteAt) *response.ApiResponsePaginationProductDeleteAt
+	ToApiResponsePaginationProduct(pbResponse *pbproduct.ApiResponsePaginationProduct) *response.ApiResponsePaginationProduct
+}
+
+type TransactionResponseMapper interface {
+	ToApiResponseTransactionMonthAmountSuccess(pbResponse *pbtransaction.ApiResponseTransactionMonthAmountSuccess) *response.ApiResponsesTransactionMonthSuccess
+	ToApiResponseTransactionMonthAmountFailed(pbResponse *pbtransaction.ApiResponseTransactionMonthAmountFailed) *response.ApiResponsesTransactionMonthFailed
+	ToApiResponseTransactionYearAmountSuccess(pbResponse *pbtransaction.ApiResponseTransactionYearAmountSuccess) *response.ApiResponsesTransactionYearSuccess
+	ToApiResponseTransactionYearAmountFailed(pbResponse *pbtransaction.ApiResponseTransactionYearAmountFailed) *response.ApiResponsesTransactionYearFailed
+	ToApiResponseTransactionMonthMethod(pbResponse *pbtransaction.ApiResponseTransactionMonthPaymentMethod) *response.ApiResponsesTransactionMonthMethod
+	ToApiResponseTransactionYearMethod(pbResponse *pbtransaction.ApiResponseTransactionYearPaymentmethod) *response.ApiResponsesTransactionYearMethod
+
+	ToApiResponseTransaction(pbResponse *pbtransaction.ApiResponseTransaction) *response.ApiResponseTransaction
+	ToApiResponseTransactionDeleteAt(pbResponse *pbtransaction.ApiResponseTransactionDeleteAt) *response.ApiResponseTransactionDeleteAt
+	ToApiResponsesTransaction(pbResponse *pbtransaction.ApiResponsesTransaction) *response.ApiResponsesTransaction
+	ToApiResponseTransactionDelete(pbResponse *pbtransaction.ApiResponseTransactionDelete) *response.ApiResponseTransactionDelete
+	ToApiResponseTransactionAll(pbResponse *pbtransaction.ApiResponseTransactionAll) *response.ApiResponseTransactionAll
+	ToApiResponsePaginationTransactionDeleteAt(pbResponse *pbtransaction.ApiResponsePaginationTransactionDeleteAt) *response.ApiResponsePaginationTransactionDeleteAt
+	ToApiResponsePaginationTransaction(pbResponse *pbtransaction.ApiResponsePaginationTransaction) *response.ApiResponsePaginationTransaction
+}

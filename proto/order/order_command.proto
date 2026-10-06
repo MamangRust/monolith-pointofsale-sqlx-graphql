@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package pb.order;
+
+import "common/api.proto";
+import "google/protobuf/empty.proto";
+import "order/order_common.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/order";
+
+service OrderCommandService {
+    rpc FindByTrashed(FindAllOrderRequest) returns (ApiResponsePaginationOrderDeleteAt) {}
+    rpc Create(CreateOrderRequest) returns (ApiResponseOrder);
+    rpc Update(UpdateOrderRequest) returns (ApiResponseOrder);
+    rpc TrashedOrder(FindByIdOrderRequest) returns (ApiResponseOrderDeleteAt);
+    rpc RestoreOrder(FindByIdOrderRequest) returns (ApiResponseOrderDeleteAt);
+    rpc DeleteOrderPermanent(FindByIdOrderRequest) returns (ApiResponseOrderDelete);
+    rpc RestoreAllOrder(google.protobuf.Empty) returns (ApiResponseOrderAll){}
+    rpc DeleteAllOrderPermanent(google.protobuf.Empty) returns (ApiResponseOrderAll){}
+}

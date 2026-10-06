@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb.cashier;
+
+import "common/api.proto";
+import "google/protobuf/empty.proto";
+import "cashier/cashier_common.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/cashier";
+
+service CashierQueryService {
+    rpc FindAll(FindAllCashierRequest) returns (ApiResponsePaginationCashier){}
+    rpc FindById(FindByIdCashierRequest) returns (ApiResponseCashier){}
+    rpc FindByActive(FindAllCashierRequest) returns (ApiResponsePaginationCashierDeleteAt) {}
+    rpc FindByMerchant(FindByMerchantCashierRequest) returns (ApiResponsePaginationCashier){}
+}

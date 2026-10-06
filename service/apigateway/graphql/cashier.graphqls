@@ -1,0 +1,246 @@
+input FindAllCashierRequest {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindByMerchantCashierRequest {
+  merchant_id: Int!
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindByIdCashierRequest {
+  id: Int!
+}
+
+input FindYearCashier {
+  year: Int!
+}
+
+input FindYearCashierByMerchant {
+  merchant_id: Int!
+  year: Int!
+}
+
+input FindYearCashierById {
+  cashier_id: Int!
+  year: Int!
+}
+
+input FindYearMonthTotalSales {
+  year: Int!
+  month: Int!
+}
+
+input FindYearTotalSales {
+  year: Int!
+}
+
+input FindYearMonthTotalSalesById {
+  year: Int!
+  month: Int!
+  cashier_id: Int!
+}
+
+input FindYearTotalSalesById {
+  year: Int!
+  cashier_id: Int!
+}
+
+input FindYearMonthTotalSalesByMerchant {
+  year: Int!
+  month: Int!
+  merchant_id: Int!
+}
+
+input FindYearTotalSalesByMerchant {
+  year: Int!
+  merchant_id: Int!
+}
+
+input CreateCashierRequest {
+  merchant_id: Int!
+  user_id: Int!
+  name: String!
+}
+
+input UpdateCashierRequest {
+  cashier_id: Int!
+  name: String!
+}
+
+type CashierResponse {
+  id: Int!
+  merchant_id: Int!
+  name: String!
+  created_at: String
+  updated_at: String
+}
+
+type CashierResponseDeleteAt {
+  id: Int!
+  merchant_id: Int!
+  name: String!
+  created_at: String
+  updated_at: String
+  deleted_at: String
+}
+
+type CashierResponseMonthSales {
+  month: String!
+  cashier_id: Int!
+  cashier_name: String!
+  order_count: Int!
+  total_sales: Int!
+}
+
+type CashierResponseYearSales {
+  year: String!
+  cashier_id: Int!
+  cashier_name: String!
+  order_count: Int!
+  total_sales: Int!
+}
+
+type CashierResponseMonthTotalSales {
+  year: String!
+  month: String!
+  total_sales: Int!
+}
+
+type CashierResponseYearTotalSales {
+  year: String!
+  total_sales: Int!
+}
+
+type ApiResponseCashier {
+  status: String!
+  message: String!
+  data: CashierResponse
+}
+
+type ApiResponseCashierDeleteAt {
+  status: String!
+  message: String!
+  data: CashierResponseDeleteAt
+}
+
+type ApiResponsesCashier {
+  status: String!
+  message: String!
+  data: [CashierResponse!]
+}
+
+type ApiResponseCashierDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseCashierAll {
+  status: String!
+  message: String!
+}
+
+type ApiResponsePaginationCashier {
+  status: String!
+  message: String!
+  data: [CashierResponse!]
+  pagination: PaginationMeta
+}
+
+type ApiResponsePaginationCashierDeleteAt {
+  status: String!
+  message: String!
+  data: [CashierResponseDeleteAt!]
+  pagination: PaginationMeta
+}
+
+type ApiResponseCashierMonthSales {
+  status: String!
+  message: String!
+  data: [CashierResponseMonthSales!]
+}
+
+type ApiResponseCashierYearSales {
+  status: String!
+  message: String!
+  data: [CashierResponseYearSales!]
+}
+
+type ApiResponseCashierMonthlyTotalSales {
+  status: String!
+  message: String!
+  data: [CashierResponseMonthTotalSales!]
+}
+
+type ApiResponseCashierYearlyTotalSales {
+  status: String!
+  message: String!
+  data: [CashierResponseYearTotalSales!]
+}
+
+extend type Query {
+  findMonthlyTotalSales(
+    input: FindYearMonthTotalSales!
+  ): ApiResponseCashierMonthlyTotalSales
+  findYearlyTotalSales(
+    input: FindYearTotalSales!
+  ): ApiResponseCashierYearlyTotalSales
+
+  findMonthlyTotalSalesById(
+    input: FindYearMonthTotalSalesById!
+  ): ApiResponseCashierMonthlyTotalSales
+  findYearlyTotalSalesById(
+    input: FindYearTotalSalesById!
+  ): ApiResponseCashierYearlyTotalSales
+
+  findMonthlyTotalSalesByMerchant(
+    input: FindYearMonthTotalSalesByMerchant!
+  ): ApiResponseCashierMonthlyTotalSales
+  findYearlyTotalSalesByMerchant(
+    input: FindYearTotalSalesByMerchant!
+  ): ApiResponseCashierYearlyTotalSales
+
+  findAllCashier(input: FindAllCashierRequest): ApiResponsePaginationCashier
+  findByIdCashier(input: FindByIdCashierRequest!): ApiResponseCashier
+
+  findMonthSales(input: FindYearCashier!): ApiResponseCashierMonthSales
+  findYearSales(input: FindYearCashier!): ApiResponseCashierYearSales
+
+  findMonthSalesByMerchant(
+    input: FindYearCashierByMerchant!
+  ): ApiResponseCashierMonthSales
+  findYearSalesByMerchant(
+    input: FindYearCashierByMerchant!
+  ): ApiResponseCashierYearSales
+
+  findMonthSalesById(input: FindYearCashierById!): ApiResponseCashierMonthSales
+  findYearSalesById(input: FindYearCashierById!): ApiResponseCashierYearSales
+
+  findByActiveCashier(
+    input: FindAllCashierRequest
+  ): ApiResponsePaginationCashierDeleteAt
+  findByTrashedCashier(
+    input: FindAllCashierRequest
+  ): ApiResponsePaginationCashierDeleteAt
+
+  findByMerchantCashier(
+    input: FindByMerchantCashierRequest
+  ): ApiResponsePaginationCashier
+}
+
+extend type Mutation {
+  createCashier(input: CreateCashierRequest!): ApiResponseCashier
+  updateCashier(input: UpdateCashierRequest!): ApiResponseCashier
+
+  trashedCashier(input: FindByIdCashierRequest!): ApiResponseCashierDeleteAt
+  restoreCashier(input: FindByIdCashierRequest!): ApiResponseCashierDeleteAt
+
+  deleteCashierPermanent(
+    input: FindByIdCashierRequest!
+  ): ApiResponseCashierDelete
+  restoreAllCashier: ApiResponseCashierAll
+  deleteAllCashierPermanent: ApiResponseCashierAll
+}

@@ -1,0 +1,16 @@
+package merchantdocumentgraphqlmapper
+
+import (
+	"github.com/MamangRust/monolith-pointofsale-apigateway/internal/model"
+	pb "github.com/MamangRust/monolith-pointofsale-pb/merchant_document"
+)
+
+type MerchantDocumentGraphqlMapper interface {
+	ToGraphqlResponseMerchantDocument(res *pb.ApiResponseMerchantDocument) *model.APIResponseMerchantDocument
+	ToGraphqlResponseMerchantDocumentDeleteAt(res *pb.ApiResponseMerchantDocument) *model.APIResponseMerchantDocumentDeleteAt
+	ToGraphqlResponseDelete(res *pb.ApiResponseMerchantDocumentDelete) *model.APIResponseMerchantDocumentDelete
+	ToGraphqlResponseAll(res *pb.ApiResponseMerchantDocumentAll) *model.APIResponseMerchantDocumentAll
+	ToGraphqlResponsePaginationMerchantDocument(res *pb.ApiResponsePaginationMerchantDocument) *model.APIResponsePaginationMerchantDocument
+	ToGraphqlResponsePaginationMerchantDocumentDeleteAt(res *pb.ApiResponsePaginationMerchantDocumentAt) *model.APIResponsePaginationMerchantDocumentAt
+	ToGraphqlResponsePaginationMerchantDocumentActive(res *pb.ApiResponsePaginationMerchantDocument) *model.APIResponsePaginationMerchantDocumentAt
+}

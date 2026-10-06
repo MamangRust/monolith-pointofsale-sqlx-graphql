@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb.product;
+
+import "common/api.proto";
+import "google/protobuf/empty.proto";
+import "product/product_common.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/product";
+
+service ProductQueryService {
+    rpc FindAll(FindAllProductRequest) returns (ApiResponsePaginationProduct);
+    rpc FindByMerchant(FindAllProductMerchantRequest) returns (ApiResponsePaginationProduct);
+    rpc FindByCategory(FindAllProductCategoryRequest) returns (ApiResponsePaginationProduct);
+    rpc FindById(FindByIdProductRequest) returns (ApiResponseProduct);
+    rpc FindByActive(FindAllProductRequest) returns (ApiResponsePaginationProductDeleteAt) {}
+}

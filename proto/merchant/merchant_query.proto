@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pb.merchant;
+
+import "common/api.proto";
+import "google/protobuf/empty.proto";
+import "merchant/merchant_common.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/merchant";
+
+service MerchantQueryService {
+    rpc FindAll(FindAllMerchantRequest) returns (ApiResponsePaginationMerchant);
+    rpc FindById(FindByIdMerchantRequest) returns (ApiResponseMerchant);
+    rpc FindByActive(FindAllMerchantRequest) returns (ApiResponsePaginationMerchantDeleteAt) {}
+}

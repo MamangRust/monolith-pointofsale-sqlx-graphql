@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package pb.role;
+
+import "common/api.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/role";
+
+message FindAllRoleRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string search = 3;
+}
+
+message FindByIdRoleRequest{
+    int32 role_id = 1;
+}
+
+message FindByNameRoleRequest{
+    string name = 1;
+}
+
+message FindByIdUserRoleRequest{
+    int32 user_id = 1;
+}
+
+message CreateRoleRequest{
+    string name = 1;
+}
+
+message UpdateRoleRequest{
+    int32 id = 1;
+    string name = 2;
+}
+
+message RoleResponse {
+  int32 id = 1;
+  string name = 2;
+  string created_at = 3;
+  string updated_at = 4;
+}
+
+message RoleResponseDeleteAt {
+  int32 id = 1;
+  string name = 2;
+  string created_at = 3;
+  string updated_at = 4;
+  string deleted_at = 5;
+}
+
+message ApiResponseRoleAll{
+    string status = 1;
+    string message = 2;
+}
+
+message ApiResponseRoleDelete{
+    string status = 1;
+    string message = 2;
+}
+
+message ApiResponseRole{
+    string status = 1;
+    string message = 2;
+    RoleResponse data = 3;
+}
+
+message ApiResponsesRole{
+    string status = 1;
+    string message = 2;
+    repeated RoleResponse data = 3;
+}
+
+message ApiResponsePaginationRole{
+    string status = 1;
+    string message = 2;
+    repeated RoleResponse data = 3;
+    pb.common.PaginationMeta pagination = 4;
+}
+
+message ApiResponsePaginationRoleDeleteAt{
+    string status = 1;
+    string message = 2;
+    repeated RoleResponseDeleteAt data = 3;
+    pb.common.PaginationMeta pagination = 4;
+}

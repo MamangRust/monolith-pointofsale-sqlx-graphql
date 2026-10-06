@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/wrappers.proto";
+import "common/api.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb";
+
+message FindAllOrderItemRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string search = 3;
+}
+
+message FindByIdOrderItemRequest {
+    int32 id = 1;
+}
+
+// The Record suffix is required: order.proto already declares
+// CreateOrderItemRequest / UpdateOrderItemRequest in this proto package.
+message CreateOrderItemRecordRequest {
+    int32 order_id = 1;
+    int32 product_id = 2;
+    int32 quantity = 3;
+    int32 price = 4;
+}
+
+message UpdateOrderItemRecordRequest {
+    int32 order_item_id = 1;
+    int32 order_id = 2;
+    int32 product_id = 3;
+    int32 quantity = 4;
+    int32 price = 5;
+}
+
+message DeleteOrderItemRecordRequest {
+    int32 order_item_id = 1;
+}
+
+
+message OrderItemResponse {
+    int32 id = 1;
+    int32 order_id = 2;
+    int32 product_id = 3;
+    int32 quantity = 4;
+    int32 price = 5;
+    string created_at = 6;
+    string updated_at = 7;
+}
+
+message OrderItemResponseDeleteAt {
+    int32 id = 1;
+    int32 order_id = 2;
+    int32 product_id = 3;
+    int32 quantity = 4;
+    int32 price = 5;
+    string created_at = 6;
+    string updated_at = 7;
+    google.protobuf.StringValue deleted_at = 8;
+}
+
+message ApiResponseOrderItem {
+    string status = 1;
+    string message = 2;
+    OrderItemResponse data = 3;
+}
+
+message ApiResponsesOrderItem {
+    string status = 1;
+    string message = 2;
+    repeated OrderItemResponse data = 3;
+}
+
+message ApiResponseOrderItemDelete {
+    string status = 1;
+    string message = 2;
+}
+
+message ApiResponseOrderItemAll {
+    string status = 1;
+    string message = 2;
+}
+
+message ApiResponsePaginationOrderItemDeleteAt {
+    string status = 1;
+    string message = 2;
+    repeated OrderItemResponseDeleteAt data = 3;
+    pb.common.PaginationMeta pagination = 4;
+}
+
+message ApiResponsePaginationOrderItem {
+    string status = 1;
+    string message = 2;
+    repeated OrderItemResponse data = 3;
+    pb.common.PaginationMeta pagination = 4;
+}
+
+
+// OrderItemQueryService is the read path other services use over gRPC.
+service OrderItemQueryService {
+    rpc FindAll(FindAllOrderItemRequest) returns (ApiResponsePaginationOrderItem);
+    rpc FindByActive(FindAllOrderItemRequest) returns (ApiResponsePaginationOrderItemDeleteAt);
+    rpc FindByTrashed(FindAllOrderItemRequest) returns (ApiResponsePaginationOrderItemDeleteAt);
+    rpc FindOrderItemByOrder(FindByIdOrderItemRequest) returns (ApiResponsesOrderItem);
+}
+
+// OrderItemCommandService is the write path. order-service owns the order
+// lifecycle but order_item-service owns the order_items table, so order-service
+// writes through this service — including the compensating delete when building
+// an order fails halfway.
+service OrderItemCommandService {
+    rpc CreateOrderItem(CreateOrderItemRecordRequest) returns (ApiResponseOrderItem);
+    rpc UpdateOrderItem(UpdateOrderItemRecordRequest) returns (ApiResponseOrderItem);
+    rpc DeleteOrderItem(DeleteOrderItemRecordRequest) returns (ApiResponseOrderItemDelete);
+}

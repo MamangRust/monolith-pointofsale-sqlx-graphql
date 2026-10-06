@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb.cashier.stats;
+
+import "common/api.proto";
+import "google/protobuf/empty.proto";
+import "cashier/cashier_common.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/cashier";
+
+service CashierStatsByMerchantService {
+    rpc FindMonthlyTotalSalesByMerchant(FindYearMonthTotalSalesByMerchant) returns (ApiResponseCashierMonthlyTotalSales){}
+    rpc FindYearlyTotalSalesByMerchant(FindYearTotalSalesByMerchant) returns (ApiResponseCashierYearlyTotalSales){}
+    rpc FindMonthSalesByMerchant(FindYearCashierByMerchant) returns(ApiResponseCashierMonthSales){}
+    rpc FindYearSalesByMerchant(FindYearCashierByMerchant) returns(ApiResponseCashierYearSales){}
+}

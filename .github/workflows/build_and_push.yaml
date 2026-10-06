@@ -1,0 +1,139 @@
+name: Build and push
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags:
+      - v*
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+          cache: true
+
+      - name: Vet workspace
+        run: go vet ./...
+
+      - name: Build workspace
+        run: go build ./...
+
+      - name: Unit tests — pkg
+        run: |
+          cd pkg
+          go test -race ./auth/ ./hash/ ./utils/ ./resilience/ ./randomstring/
+
+      - name: Unit tests — shared (error mapping)
+        run: |
+          cd shared
+          go test ./errors/...
+
+      - name: Unit tests — service (non-integration)
+        run: |
+          for d in auth role user category cashier merchant order order_item product transaction; do
+            (cd service/$d && go test -short ./service/...) || exit 1
+          done
+
+      - name: Compile integration test module
+        run: |
+          cd tests
+          go build ./...
+
+  integration:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+          cache: true
+
+      - name: Integration tests (testcontainers)
+        # Testcontainers PostgreSQL 16 + Redis 7 per domain suite.
+        # GOWORK=off agar module tests mandiri; APP_ENV=development tanpa log file.
+        run: |
+          cd tests
+          GOWORK=off APP_ENV=development go test -count=1 -timeout 30m -v ./auth/... ./category/...
+        timeout-minutes: 40
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+
+    strategy:
+      matrix:
+        service:
+          - apigateway
+          - migrate
+          - auth
+          - user
+          - role
+          - category
+          - cashier
+          - email
+          - merchant
+          - order
+          - order_item
+          - product
+          - transaction
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/mamangrust/monolith-pointofsale-grpc/${{ matrix.service }}
+          tags: |
+            type=ref,event=branch,name=main
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+          labels: |
+            org.opencontainers.image.title=${{ matrix.service }}
+            org.opencontainers.image.description=Microservice ${{ matrix.service }} for Point of Sale
+            org.opencontainers.image.source=https://github.com/MamangRust/monolith-pointofsale-grpc
+            org.opencontainers.image.url=https://github.com/MamangRust/monolith-pointofsale-grpc
+            org.opencontainers.image.licenses=MIT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.MY_TOKEN }}
+
+      - name: Debug Build Info
+        run: |
+          echo "Building service: ${{ matrix.service }}"
+          echo "Dockerfile: service/${{ matrix.service }}/Dockerfile"
+          echo "Context: . (repo root — Dockerfile COPY go.work, pkg/, shared/, service/)"
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: .
+          file: ./service/${{ matrix.service }}/Dockerfile
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            ghcr.io/mamangrust/monolith-pointofsale-grpc/${{ matrix.service }}:latest
+          labels: ${{ steps.meta.outputs.labels }}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb.category.stats;
+
+import "common/api.proto";
+import "google/protobuf/empty.proto";
+import "category/category_common.proto";
+
+option go_package = "github.com/MamangRust/monolith-pointofsale-pb/category";
+
+service CategoryStatsService {
+    rpc FindMonthlyTotalPrices(FindYearMonthTotalPrices) returns (ApiResponseCategoryMonthlyTotalPrice){}
+    rpc FindYearlyTotalPrices(FindYearTotalPrices) returns (ApiResponseCategoryYearlyTotalPrice){}
+    rpc FindMonthPrice(FindYearCategory) returns(ApiResponseCategoryMonthPrice);
+    rpc FindYearPrice(FindYearCategory) returns(ApiResponseCategoryYearPrice);
+}

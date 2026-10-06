@@ -1,0 +1,243 @@
+input FindAllOrderInput {
+  page: Int
+  page_size: Int
+  search: String
+}
+
+input FindAllOrderMerchantInput {
+  page: Int
+  page_size: Int
+  search: String
+  merchant_id: Int!
+}
+
+input FindByIdOrderInput {
+  id: Int!
+}
+
+input FindYearOrderInput {
+  year: Int!
+}
+
+input FindYearOrderByMerchantInput {
+  merchant_id: Int!
+  year: Int!
+}
+
+input FindYearMonthTotalRevenueInput {
+  year: Int!
+  month: Int!
+}
+
+input FindYearTotalRevenueInput {
+  year: Int!
+}
+
+input FindYearMonthTotalRevenueByIdInput {
+  year: Int!
+  month: Int!
+  order_id: Int!
+}
+
+input FindYearTotalRevenueByIdInput {
+  year: Int!
+  order_id: Int!
+}
+
+input FindYearMonthTotalRevenueByMerchantInput {
+  year: Int!
+  month: Int!
+  merchant_id: Int!
+}
+
+input FindYearTotalRevenueByMerchantInput {
+  year: Int!
+  merchant_id: Int!
+}
+
+input CreateOrderItemInput {
+  product_id: Int!
+  quantity: Int!
+}
+
+input UpdateOrderItemInput {
+  order_item_id: Int!
+  product_id: Int!
+  quantity: Int!
+}
+
+input CreateOrderInput {
+  merchant_id: Int!
+  cashier_id: Int!
+  items: [CreateOrderItemInput!]!
+}
+
+input UpdateOrderInput {
+  order_id: Int!
+  items: [UpdateOrderItemInput!]!
+}
+
+type OrderResponse {
+  id: Int!
+  merchant_id: Int!
+  cashier_id: Int!
+  total_price: Int!
+  created_at: String
+  updated_at: String
+}
+
+type OrderResponseDeleteAt {
+  id: Int!
+  merchant_id: Int!
+  cashier_id: Int!
+  total_price: Int!
+  created_at: String
+  updated_at: String
+  deleted_at: String
+}
+
+type OrderMonthlyResponse {
+  month: String
+  order_count: Int
+  total_revenue: Int
+  total_items_sold: Int
+}
+
+type OrderYearlyResponse {
+  year: String
+  order_count: Int
+  total_revenue: Int
+  total_items_sold: Int
+  active_cashiers: Int
+  unique_products_sold: Int
+}
+
+type OrderMonthlyTotalRevenue {
+  year: String
+  month: String
+  order_count: Int
+  total_revenue: Int
+  total_items_sold: Int
+}
+
+type OrderYearlyTotalRevenue {
+  year: String
+  order_count: Int
+  total_revenue: Int
+  total_items_sold: Int
+  active_cashiers: Int
+  unique_products_sold: Int
+}
+
+type ApiResponseOrder {
+  status: String!
+  message: String!
+  data: OrderResponse
+}
+
+type ApiResponseOrderDeleteAt {
+  status: String!
+  message: String!
+  data: OrderResponseDeleteAt
+}
+
+type ApiResponsesOrder {
+  status: String!
+  message: String!
+  data: [OrderResponse!]
+}
+
+type ApiResponseOrderDelete {
+  status: String!
+  message: String!
+}
+
+type ApiResponseOrderAll {
+  status: String!
+  message: String!
+}
+
+type ApiResponsePaginationOrder {
+  status: String!
+  message: String!
+  data: [OrderResponse!]
+  pagination: PaginationMeta
+}
+
+type ApiResponsePaginationOrderDeleteAt {
+  status: String!
+  message: String!
+  data: [OrderResponseDeleteAt!]
+  pagination: PaginationMeta
+}
+
+type ApiResponseOrderMonthly {
+  status: String!
+  message: String!
+  data: [OrderMonthlyResponse!]
+}
+
+type ApiResponseOrderYearly {
+  status: String!
+  message: String!
+  data: [OrderYearlyResponse!]
+}
+
+type ApiResponseOrderMonthlyTotalRevenue {
+  status: String!
+  message: String!
+  data: [OrderMonthlyTotalRevenue!]
+}
+
+type ApiResponseOrderYearlyTotalRevenue {
+  status: String!
+  message: String!
+  data: [OrderYearlyTotalRevenue!]
+}
+
+extend type Query {
+  findMonthlyTotalRevenue(
+    input: FindYearMonthTotalRevenueInput!
+  ): ApiResponseOrderMonthlyTotalRevenue
+  findYearlyTotalRevenue(
+    input: FindYearTotalRevenueInput!
+  ): ApiResponseOrderYearlyTotalRevenue
+
+  findMonthlyTotalRevenueByMerchant(
+    input: FindYearMonthTotalRevenueByMerchantInput!
+  ): ApiResponseOrderMonthlyTotalRevenue
+  findYearlyTotalRevenueByMerchant(
+    input: FindYearTotalRevenueByMerchantInput!
+  ): ApiResponseOrderYearlyTotalRevenue
+
+  findAllOrder(input: FindAllOrderInput!): ApiResponsePaginationOrder
+  findByMerchantOrder(
+    input: FindAllOrderMerchantInput!
+  ): ApiResponsePaginationOrder
+  findByIdOrder(input: FindByIdOrderInput!): ApiResponseOrder
+  findByActiveOrder(
+    input: FindAllOrderInput!
+  ): ApiResponsePaginationOrderDeleteAt
+  findByTrashedOrder(
+    input: FindAllOrderInput!
+  ): ApiResponsePaginationOrderDeleteAt
+
+  findMonthlyRevenue(input: FindYearOrderInput!): ApiResponseOrderMonthly
+  findYearlyRevenue(input: FindYearOrderInput!): ApiResponseOrderYearly
+  findMonthlyRevenueByMerchant(
+    input: FindYearOrderByMerchantInput!
+  ): ApiResponseOrderMonthly
+  findYearlyRevenueByMerchant(
+    input: FindYearOrderByMerchantInput!
+  ): ApiResponseOrderYearly
+}
+
+extend type Mutation {
+  createOrder(input: CreateOrderInput!): ApiResponseOrder
+  updateOrder(input: UpdateOrderInput!): ApiResponseOrder
+  trashedOrder(input: FindByIdOrderInput!): ApiResponseOrderDeleteAt
+  restoreOrder(input: FindByIdOrderInput!): ApiResponseOrderDeleteAt
+  deleteOrderPermanent(input: FindByIdOrderInput!): ApiResponseOrderDelete
+  restoreAllOrder: ApiResponseOrderAll
+  deleteAllOrderPermanent: ApiResponseOrderAll
+}
